@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Model">
+      <UniqueIdentifier>{2f98c846-8ee1-4771-a809-45da4cebfac8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nanodbc">
+      <UniqueIdentifier>{4d3e78c3-1b49-4f15-8a9f-0325b139c63a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Service">
+      <UniqueIdentifier>{3a6bd4ce-5901-4f2e-931d-e9b2b5eb4569}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Events">
+      <UniqueIdentifier>{2eac35fa-0fe7-412f-8f19-0d641bb63c39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SnmpParser">
+      <UniqueIdentifier>{2b98bd98-18fe-4813-88be-b603705254a6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Service.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="snmpOid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="strMatch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TraceEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TrapHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="trapReceiver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nanodbc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ExecObj.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FSThresholds.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalConf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Proxies.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Service.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Thresholds.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerObj.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TraceEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TrapHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HostControl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DBUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HostInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nanodbc.h">
+      <Filter>Header Files\nanodbc</Filter>
+    </ClInclude>
+    <ClInclude Include="Threshold.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="ThresholdService.h">
+      <Filter>Header Files\Service</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AgentEvent.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="AgentEventFactory.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="asn1parsers.h">
+      <Filter>Header Files\SnmpParser</Filter>
+    </ClInclude>
+    <ClInclude Include="snmpOid.h">
+      <Filter>Header Files\SnmpParser</Filter>
+    </ClInclude>
+    <ClInclude Include="strMatch.h">
+      <Filter>Header Files\SnmpParser</Filter>
+    </ClInclude>
+    <ClInclude Include="trapReceiver.h">
+      <Filter>Header Files\SnmpParser</Filter>
+    </ClInclude>
+    <ClInclude Include="CSnmpTrap.h">
+      <Filter>Header Files\SnmpParser</Filter>
+    </ClInclude>
+    <ClInclude Include="DiskMetricEvent.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessFailEvent.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="ServiceFailEvent.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="ClusterFailEvent.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="StartMaintenanceEvent.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorEvent.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="HelloEvent.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="GoodbyeEvent.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSystem.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Host.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="ProxyConf.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="GenericEvent.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="TrapHandlerModel.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\CreateProxies.sql" />
+    <None Include="CreateThresholds.sql" />
+    <None Include="Testcommands.txt" />
+    <None Include="..\Package1.2\CreateHosts.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TrapHandler.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
