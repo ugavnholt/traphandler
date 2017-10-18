@@ -185,6 +185,7 @@
     <ClInclude Include="AgentEventFactory.h" />
     <ClInclude Include="asn1parsers.h" />
     <ClInclude Include="ClusterFailEvent.h" />
+    <ClInclude Include="CmdQueue.h" />
     <ClInclude Include="CSnmpTrap.h" />
     <ClInclude Include="DBUtil.h" />
     <ClInclude Include="DiskMetricEvent.h" />

@@ -1,16 +1,16 @@
 #ifndef __CORRELATOR_HEAD
 #define __CORRELATOR_HEAD
 
-#include "stdafx.h"
+#include "TraceEngine.h"
 #include "service.h"
 #include <list>
-#include "ExecObj.h"
 #include "TrapReceiver.h"
 #include "TimerObj.h"
 #include "HostControl.h"
 #include "utils.h"
 #include "AgentEventFactory.h"
 #include "TrapHandlerModel.h"
+#include "CmdQueue.h"
 
 #pragma comment (lib, "Version.lib") // to read the VS_VERSION_INFO structure
 #pragma warning (disable :4996)
@@ -27,8 +27,7 @@ const wchar_t *SevMajor				= L"Major";
 const wchar_t *SevCritical			= L"Critical";
 const wchar_t *DefaultSeverity		= SevMajor;
 
-concurrency::concurrent_queue<ExecObj*> CmdQueue;
-std::list<ExecObj*>  RunningCommands;			// The commands currently running
+traphandler::CmdQueue cmdQueue;
 std::list<TimerObj*> ActiveTimers;				// The timers currently active
 
 #include "Thresholds.h"
@@ -103,18 +102,7 @@ void processTraps(CTrapReceiver *trapReceiver,
 		}
 
 		// call the trap processor, using the cached model as input
-		std::wstring cmd = newEvent->ProcessTrap(model);
-		if (!cmd.empty())
-		{
-			// spawn a new command
-			ExecObj *newCmd = new ExecObj();
-			newCmd->setCmdStr(cmd.c_str());
-
-			// queue the command for execution
-			CmdQueue.push(newCmd);
-			dd(L"SNMP  ", L"Queued command: %s\r\n", cmd.c_str());
-		}
-
+		cmdQueue.QueueCommand(*newEvent, model);
 
         ////////////////////////////
         // Disk Metric event
@@ -731,16 +719,12 @@ DWORD HandlerMainFn(LPDWORD pParam)
 	DWORD dwWaitTime = 100;
 	traphandler::events::AgentEventFactory eventFactory;
 
-	int nCommands = 0;		// number of commands currently running
-
 	LoadHosts(configSession);
 
 	DWORD dwWaitResult = WAIT_TIMEOUT;
 	BOOL bQuit = false;
 	FILETIME ftLastThreshUpdateTime;
 	GetSystemTimeAsFileTime(&ftLastThreshUpdateTime);
-
-	DWORD dwExecutedCommands = 0;
 
 	//connection(const string& connection_string, long timeout = 0);
 	nanodbc::connection conn(std::string(
@@ -755,7 +739,7 @@ DWORD HandlerMainFn(LPDWORD pParam)
 	while(!bQuit)
 	{
 		dwWaitResult = WAIT_TIMEOUT;
-		if(pQueue.empty())	// only wait if there is no traps to process
+		if(cmdQueue.isEmpty())	// only wait if there is no traps to process
 			dwWaitResult = WaitForSingleObject(hQuitEvent, dwWaitTime);
 
 		// Do we have to quit?
@@ -796,31 +780,9 @@ DWORD HandlerMainFn(LPDWORD pParam)
 			// Pop all SNMP traps from queue
 			processTraps(trapReceiver, eventFactory);
 
-			///////////////////////////////
-			// Check for any completed commands
-			std::list<ExecObj*>::iterator cmdIt = RunningCommands.begin();
-			while(cmdIt != RunningCommands.end())
-			{
-				// have the command completed
-				DWORD cmdRet = (*cmdIt)->GetCmdState();
-				if(cmdRet != STILL_ACTIVE)	// command completed
-				{
-					if(cmdRet != 0)
-					{
-						dmi(Facility, L"Command: %s returned %x\r\n", (*cmdIt)->GetCmdStr(), cmdRet);
-					}
-					else
-					{
-						dd(Facility, L"Command: %s completed\r\n", (*cmdIt)->GetCmdStr());
-					}
-					delete (*cmdIt);
-					cmdIt = RunningCommands.erase(cmdIt);
-					nCommands--;	// release a command slot
-					dwExecutedCommands++;
-				}
-				else
-					cmdIt++;
-			}
+			//////////////////////////////
+			// Check status of runningCommands
+			cmdQueue.processCommands();
 
 			///////////////////////////////
 			// Check all timers
@@ -867,21 +829,7 @@ DWORD HandlerMainFn(LPDWORD pParam)
 
 			///////////////////////////////
 			// Execute any commands queued (if we have available command slots)
-			ExecObj *newCmd;
-			while ((nCommands < MAXCONCURRENTCMDS) && CmdQueue.try_pop(newCmd))
-			{
-				// wprintf(L"running command: %s\r\n", newCmd->GetCmdStr());
-				if(newCmd->RunCmd() != NULL)
-				{
-					dw(Facility, L"Error launching command: %s\r\n", newCmd->GetCmdStr());
-					delete newCmd;
-				}
-				else
-				{
-					RunningCommands.push_back(newCmd);
-					nCommands++;
-				}
-			}
+			cmdQueue.ProcessQueue();
 
 		}
 	} // main loop
@@ -914,26 +862,6 @@ DWORD HandlerMainFn(LPDWORD pParam)
 		timIt = ActiveTimers.erase(timIt);
 	}
 
-	dw(Facility, L"Emptying command queue for %u outstanding command request(s), due to application shutdown\r\n", CmdQueue.unsafe_size());
-	ExecObj *tmpCmd;
-	while (CmdQueue.try_pop(tmpCmd))
-	{
-		delete tmpCmd;
-	}
-
-	// Terminate any running commands
-	if(nCommands > 0)
-	{
-		dw(Facility, L"Terminating %u command(s) that are still running, due to application shutdown\r\n", nCommands);
-		while(!RunningCommands.empty())
-		{
-			RunningCommands.front()->GetCmdReturn(1000);
-			delete RunningCommands.front();
-			RunningCommands.pop_front();
-			dwExecutedCommands++;
-		}
-	}
-
 	// Delete all FileSystems
 	while(!FileSystems.empty())
 	{
@@ -951,7 +879,7 @@ DWORD HandlerMainFn(LPDWORD pParam)
     // Empty host list
     FreeHosts();
 
-	print(Facility, L"Executed %u command(s)\r\n", dwExecutedCommands);
+	print(Facility, L"Executed %u command(s)\r\n", cmdQueue.GetExecutedCommands());
 
 	print(Facility, L"Main loop terminated\r\n");
 	return 0;
