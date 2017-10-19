@@ -8,8 +8,8 @@
 wchar_t *wcsConnectionString = NULL;
 wchar_t *wcsInstallPath = NULL;
 const wchar_t *wcsTrapHandlerRegKey=L"SOFTWARE\\Rubik Solutions\\TrapHandler";
-CSession *configSession = NULL;
-CSession *metricSession = NULL;
+//CSession *configSession = NULL;
+//CSession *metricSession = NULL;
 FILETIME lastConfigUpdateTime;
 
 int SNMPQUEUELENGTH=1000000;	// buffer up to 1.000.000 snmp traps for processing

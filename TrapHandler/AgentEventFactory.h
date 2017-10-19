@@ -22,9 +22,9 @@ namespace traphandler
 class AgentEventFactory
 {
 public:
-	traphandler::events::AgentEvent *GetEventFromTrap(CSnmpTrap &source_trap)
+	bool GetEventFromTrap(const CSnmpTrap &source_trap, traphandler::events::AgentEvent *&newEvent)
 	{
-		traphandler::events::AgentEvent *newEvent = nullptr;
+		newEvent = nullptr;
 		if (source_trap.TrapOid == &TrapOidDiskMetric)
 			newEvent = new traphandler::events::DiskMetricEvent();
 		else if (source_trap.TrapOid == &TrapOidProcFail)
@@ -40,9 +40,12 @@ public:
 		else if (source_trap.TrapOid == &TrapOidGoodbye)
 			newEvent = new traphandler::events::GoodbyeEvent();
 		else
+		{
 			newEvent = new traphandler::events::GenericEvent();
+			return false;
+		}
 		
-		return newEvent;
+		return true;
 	}
 	AgentEventFactory() :
 		TrapOidDiskMetric(L".1.3.6.1.4.1.15282.10.0.2"),

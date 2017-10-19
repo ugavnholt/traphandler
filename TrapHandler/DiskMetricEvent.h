@@ -9,9 +9,7 @@ namespace traphandler
 class DiskMetricEvent : public AgentEvent
 {
 public:
-	std::wstring hostname;
 	std::wstring volume_name;
-	std::wstring platformId;
 	int64_t fsSizeMb;
 	int64_t availableSpaceMb;
 	std::wstring ProcessTrap(traphandler::model::TrapHandlerModel& model) override

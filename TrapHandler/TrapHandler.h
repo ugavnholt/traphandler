@@ -46,34 +46,11 @@ wchar_t wcsLocalHostName[256];	// our local host name
 ////////////////////////////////
 
 DWORD WINAPI queueFunc(LPVOID p);
+void processTraps(CTrapReceiver *trapReceiver,
+	traphandler::events::AgentEventFactory &eventFactory,
+	traphandler::model::TrapHandlerModel &model);
 
-inline TimerObj* LocateTimer(const wchar_t *id, const timerType type)
-{
-	std::list<TimerObj*>::iterator it;
-	for(it = ActiveTimers.begin(); it != ActiveTimers.end(); it++)
-	{
-		if ((*it)->GetTimerType() == type && wcsicmp((*it)->GetTimerID(), id) == 0)
-			return (*it);
-	}
-	return NULL;
-}
-
-inline void DeleteTimer(const wchar_t *id, const timerType type)
-{
-	auto it = ActiveTimers.begin();
-	while(it != ActiveTimers.end())
-	{
-		if ((*it)->GetTimerType() == type && wcsicmp((*it)->GetTimerID(), id) == 0)
-		{
-			delete *it;
-			it = ActiveTimers.erase(it);
-			return;
-		}
-		it++;
-	}
-}
-
-void processTraps(CTrapReceiver *trapReceiver, 
+inline void processTraps(CTrapReceiver *trapReceiver, 
 	traphandler::events::AgentEventFactory &eventFactory,
 	traphandler::model::TrapHandlerModel &model)
 {
@@ -83,25 +60,35 @@ void processTraps(CTrapReceiver *trapReceiver,
 		bool bError = false;
 		// Decode the trap
 		CSnmpTrap snmpTrap(newPacket);
-		snmpTrap.Decode(newPacket->buf);
+		if (!snmpTrap.Decode(newPacket->buf))
+		{
+			dmi(L"SNMP  ", L"Received malformed SNMP packet\r\n");
+			delete newPacket;
+			continue;
+		}
 		if((*snmpTrap.pReqType & 0xff) == 0xA6)
 			trapReceiver->SendAck(newPacket, snmpTrap.pReqType);
 
 		///////////////////////////
-		// Process knwon SNMP traps here
-		traphandler::events::AgentEvent *newEvent = 
-			eventFactory.GetEventFromTrap(snmpTrap);
+		// Process known SNMP traps here
+		traphandler::events::AgentEvent *newEvent = nullptr;
+		if (!eventFactory.GetEventFromTrap(snmpTrap, newEvent))
+		{
+			std::wstring msg = L"Received unknown SNMP event with oid: ";
+			msg += (const wchar_t*)snmpTrap.TrapOid;
+			dmi(L"SNMP  ", L"%s \r\n", msg.c_str());
+			delete newPacket;
+			continue;
+		}
 		if (!newEvent->ParseTrap(snmpTrap))
 		{
-			dd(L"SNMP  ", L"Received event: %s\r\n", newEvent->to_wstring());
-			
-		}
-		else
-		{
 			dmi(L"SNMP  ", L"Received malformed SNMP event\r\n");
+			delete newPacket;
+			continue;
 		}
+		dd(L"SNMP  ", L"Received event: %s\r\n", newEvent->to_wstring());
 
-		// call the trap processor, using the cached model as input
+		// Call the queue, to process the trap, and queue any actions needed
 		cmdQueue.QueueCommand(*newEvent, model);
 
         ////////////////////////////
@@ -193,109 +180,6 @@ void processTraps(CTrapReceiver *trapReceiver,
         // Service fail event
 		else if(*snmpTrap->TrapOid == &TrapOidServFail)
 		{
-			if((snmpTrap->varArgs.size() == 5 &&	// version pre 1.12 trap
-				snmpTrap->varArgs[0]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[1]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[2]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[3]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[4]->iValueType == SNMP_TYPE_STR ) || 
-                ( snmpTrap->varArgs.size() == 6 &&	// Version 1.12 trap 
-				snmpTrap->varArgs[0]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[1]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[2]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[3]->iValueType == SNMP_TYPE_STR &&
-                snmpTrap->varArgs[4]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[5]->iValueType == SNMP_TYPE_STR) ||
-				( snmpTrap->varArgs.size() == 8 && // Version 1.13+ trap 
-				snmpTrap->varArgs[0]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[1]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[2]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[3]->iValueType == SNMP_TYPE_STR &&
-                snmpTrap->varArgs[4]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[5]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[6]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[7]->iValueType == SNMP_TYPE_STR
-				))
-			{
-                wchar_t *pHostName, *pCurrentState, *pDesiredState, *pServiceLabel, *pServiceName;
-                const wchar_t *pPlatformID = NoPlatform, *pMsgGroup, *pMsgSeverity;
-
-                if(snmpTrap->varArgs.size() == 5)
-                {
-                    pHostName = snmpTrap->varArgs[0]->wcsVal;
-                    pServiceName = snmpTrap->varArgs[1]->wcsVal;
-                    pCurrentState = snmpTrap->varArgs[3]->wcsVal;
-                    pDesiredState = snmpTrap->varArgs[2]->wcsVal;   // current and normal state was swapped in the old format
-                    pServiceLabel = snmpTrap->varArgs[4]->wcsVal;   
-					pMsgGroup		= DefaultMsgGrp;
-					pMsgSeverity	= DefaultSeverity;
-                }
-                else if(snmpTrap->varArgs.size() == 6)
-                {
-                    pHostName = snmpTrap->varArgs[0]->wcsVal;
-                    pPlatformID = snmpTrap->varArgs[1]->wcsVal;
-                    pServiceName = snmpTrap->varArgs[2]->wcsVal;
-                    pCurrentState = snmpTrap->varArgs[3]->wcsVal;
-                    pDesiredState = snmpTrap->varArgs[4]->wcsVal;
-                    pServiceLabel = snmpTrap->varArgs[5]->wcsVal;
-                    pMsgGroup		= DefaultMsgGrp;
-					pMsgSeverity	= DefaultSeverity;
-                }
-				else if(snmpTrap->varArgs.size() == 8)
-				{
-					pHostName = snmpTrap->varArgs[0]->wcsVal;
-                    pPlatformID = snmpTrap->varArgs[1]->wcsVal;
-                    pServiceName = snmpTrap->varArgs[2]->wcsVal;
-                    pCurrentState = snmpTrap->varArgs[3]->wcsVal;
-                    pDesiredState = snmpTrap->varArgs[4]->wcsVal;
-                    pServiceLabel = snmpTrap->varArgs[5]->wcsVal;
-                    pMsgGroup		= snmpTrap->varArgs[6]->wcsVal;
-					pMsgSeverity	= utils::str_to_severity(snmpTrap->varArgs[7]->wcsVal);
-				}
-				dd(L"SNMP  ", L"Received service state event from %s(%s) - service: %s, currentstate: %s, desiredstate: %s, serviceLabel: %s\r\n", 
-					pHostName,
-                    pPlatformID,
-					pServiceName,
-					pCurrentState,
-					pDesiredState,
-					pServiceLabel);
-				bError = true;	// do not send a generic event
-
-				wchar_t *wcsCmd = new wchar_t[MAX_CMD+1];
-				wchar_t *p = wcsCmd;
-				if(snmpTrap->varArgs.size() == 8)
-					p = wcsapp(p, L"opcmsg a=UGMon1_13 o=serviceState -node=");
-				else
-					p = wcsapp(p, L"opcmsg a=UGMon o=serviceState -node=");
-
-				
-				p = wcsapp(p, pHostName);
-				p = wcsapp(p, L" msg_grp=");
-				p = wcsapp(p, pMsgGroup);
-				if(wcsicmp(pMsgGroup, DefaultMsgGrp) == 0)
-					p = wcsapp(p, pPlatformID);
-				p = wcsapp(p, L" sev=");
-				p = wcsapp(p, pMsgSeverity);
-				p = wcsapp(p, L" msg_t=\"host='");
-				p = wcsapp(p, pHostName);
-				p = wcsapp(p, L"' service='");
-				p = wcsapp(p, pServiceName);
-				p = wcsapp(p, L"' currentState='");
-				p = wcsapp(p, pCurrentState);
-				p = wcsapp(p, L"' desiredState='");
-				p = wcsapp(p, pDesiredState);
-                p = wcsapp(p, L"' platform='");
-				p = wcsapp(p, pPlatformID);
-				p = wcsapp(p, L"'\" -option currentState=");
-				p = wcsapp(p, pCurrentState);
-				p = wcsapp(p, L" -option desiredState=");
-				p = wcsapp(p, pDesiredState);
-				p = wcsapp(p, L" -option label=\"");
-				p = wcsapp(p, pServiceLabel);
-				p = wcsapp(p, L"\"");
-				ExecObj *newCmd = new ExecObj();
-				newCmd->setCmdStr(wcsCmd);
-				
 				// queue the command for execution
 				CmdQueue.push(newCmd);
 				dd(L"SNMP  ", L"Queued command: %s\r\n", wcsCmd);
@@ -312,76 +196,12 @@ void processTraps(CTrapReceiver *trapReceiver,
         // Cluster resource group fail event
 		else if(*snmpTrap->TrapOid == &TrapOidClusFail)
 		{
-			if( (snmpTrap->varArgs.size() == 5 && 
-				snmpTrap->varArgs[0]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[1]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[2]->iValueType == SNMP_TYPE_STR &&
-                snmpTrap->varArgs[3]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[4]->iValueType == SNMP_TYPE_STR))
-			{
-                wchar_t *pHostName, *pResGroup, *pCluName, *pState;
-
-                pHostName = snmpTrap->varArgs[0]->wcsVal;
-                const wchar_t *pPlatformID = snmpTrap->varArgs[1]->wcsVal;
-                pResGroup = snmpTrap->varArgs[2]->wcsVal;
-                pCluName = snmpTrap->varArgs[3]->wcsVal;
-                pState = snmpTrap->varArgs[4]->wcsVal;
-  
-				dd(L"SNMP  ", L"Received cluster state event from %s(%s) - resource group: %s, cluster name: %s, state: %s\r\n", 
-					pHostName,
-                    pPlatformID,
-					pResGroup,
-					pCluName,
-					pState);
-			}
-            else
-            {
-				dmi(L"SNMP  ", L"Received invalid formatted cluster state event\r\n");
-				bError = true;
-			}
+			
 		}
         ////////////////////////////
         // Maintenance start event
 		else if(*snmpTrap->TrapOid == &TrapOidStartMaint)
 		{
-			if((snmpTrap->varArgs.size() == 4 &&
-				snmpTrap->varArgs[0]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[1]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[2]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[3]->iValueType == SNMP_TYPE_STR) ||
-                (snmpTrap->varArgs.size() == 5 &&
-				snmpTrap->varArgs[0]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[1]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[2]->iValueType == SNMP_TYPE_STR &&
-                snmpTrap->varArgs[3]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[4]->iValueType == SNMP_TYPE_STR))
-			
-			{
-                const wchar_t *pPlatformID = NoPlatform;
-                wchar_t *pHostName, *pUserName, *pDescription, *pDuration;
-
-                if(snmpTrap->varArgs.size() == 4)
-                {
-                    pHostName = snmpTrap->varArgs[0]->wcsVal;
-					pUserName = snmpTrap->varArgs[1]->wcsVal;
-					pDescription = snmpTrap->varArgs[2]->wcsVal;
-					pDuration = snmpTrap->varArgs[3]->wcsVal;
-                }
-                else
-                {
-                    pHostName = snmpTrap->varArgs[0]->wcsVal;
-                    pPlatformID = snmpTrap->varArgs[1]->wcsVal;
-					pUserName = snmpTrap->varArgs[2]->wcsVal;
-					pDescription = snmpTrap->varArgs[3]->wcsVal;
-					pDuration = snmpTrap->varArgs[4]->wcsVal;
-                }
-				dd(L"SNMP  ", L"Received start maintenance event for node: %s(%s) - user: %s, description: %s, duration: %s\r\n", 
-					pHostName,
-                    pPlatformID,
-					pUserName,
-					pDescription,
-					pDuration);
-
                 wchar_t *timerId = new wchar_t[300];
                 wchar_t *p = timerId;
                 p = wcsapp(timerId, pHostName);
@@ -416,43 +236,6 @@ void processTraps(CTrapReceiver *trapReceiver,
         // Error message event
 		else if(*snmpTrap->TrapOid == &TrapOidError)
 		{
-			if((snmpTrap->varArgs.size() == 3 &&
-				snmpTrap->varArgs[0]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[1]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[2]->iValueType == SNMP_TYPE_STR) ||
-                (snmpTrap->varArgs.size() == 4 &&
-				snmpTrap->varArgs[0]->iValueType == SNMP_TYPE_STR &&
-				snmpTrap->varArgs[1]->iValueType == SNMP_TYPE_STR &&
-                snmpTrap->varArgs[2]->iValueType == SNMP_TYPE_STR &&
-                snmpTrap->varArgs[3]->iValueType == SNMP_TYPE_STR))
-			
-			{
-                const wchar_t *pPlatformID = NoPlatform;
-                wchar_t *pNodeName, *pMessage, *pSeverity;
-                if(snmpTrap->varArgs.size() == 3)
-                {
-                    pNodeName = snmpTrap->varArgs[0]->wcsVal;
-					pMessage = snmpTrap->varArgs[1]->wcsVal;
-					pSeverity = snmpTrap->varArgs[2]->wcsVal;
-                }
-                else
-                {
-                    pNodeName = snmpTrap->varArgs[0]->wcsVal;
-                    pPlatformID = snmpTrap->varArgs[1]->wcsVal;
-					pMessage = snmpTrap->varArgs[2]->wcsVal;
-					pSeverity = snmpTrap->varArgs[3]->wcsVal;
-                }
-				dd(L"SNMP  ", L"Received error event from node: %s(%s) message %s, severity: %s\r\n", 
-					pNodeName,
-                    pPlatformID,
-					pMessage,
-					pSeverity);
-			}
-            else
-            {
-				dmi(L"SNMP  ", L"Received invalid error message\r\n");
-				bError = true;
-			}
 
 		}
         ////////////////////////////
@@ -1049,6 +832,32 @@ bool ServiceInstall(const wchar_t *pathName)
 	RegCloseKey(hKey);
 	
 	return true;
+}
+
+inline TimerObj* LocateTimer(const wchar_t *id, const timerType type)
+{
+	std::list<TimerObj*>::iterator it;
+	for (it = ActiveTimers.begin(); it != ActiveTimers.end(); it++)
+	{
+		if ((*it)->GetTimerType() == type && wcsicmp((*it)->GetTimerID(), id) == 0)
+			return (*it);
+	}
+	return NULL;
+}
+
+inline void DeleteTimer(const wchar_t *id, const timerType type)
+{
+	auto it = ActiveTimers.begin();
+	while (it != ActiveTimers.end())
+	{
+		if ((*it)->GetTimerType() == type && wcsicmp((*it)->GetTimerID(), id) == 0)
+		{
+			delete *it;
+			it = ActiveTimers.erase(it);
+			return;
+		}
+		it++;
+	}
 }
 
 #pragma warning (disable: 4312)

@@ -9,8 +9,6 @@ namespace traphandler
 		class ProcessFailEvent : public AgentEvent
 		{
 		public:
-			std::wstring hostname;
-			std::wstring platformId;
 			std::wstring processName;
 			std::wstring currentState;
 			std::wstring desiredState;

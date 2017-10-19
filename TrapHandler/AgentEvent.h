@@ -24,6 +24,8 @@ enum class AgentVersion
 class AgentEvent
 {
 public:
+	std::wstring hostname;
+	std::wstring platformId = NoPlatform;
 	AgentVersion agentVersion = AgentVersion::pre1_13;
 	virtual std::wstring to_cmd_str() const = 0;
 	virtual bool ParseTrap(const CSnmpTrap& source_trap) = 0;

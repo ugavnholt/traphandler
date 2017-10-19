@@ -1,7 +1,35 @@
 #pragma once
 
+#include "stdafx.h"
 #include <string>
 #include <cctype>
+
+#ifndef __DEBUG_PRINT
+#define __DEBUG_PRINT
+// #define print(x,...) if(bDebug) {_print(x,__VA_ARGS__);}
+#define print(x,z,...) pTrace->SendEvent(LOG_DEBUG, x, z, __VA_ARGS__);
+inline void _print(const wchar_t *format, ...)
+{
+	if (!bDebug)
+		return;
+
+	va_list argList;
+	va_start(argList, format);
+
+	vwprintf(format, argList);
+}
+#endif
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+// Debug macros
+// z = message
+#define dd(x,z,...)	pTrace->SendEvent(LOG_DEBUG, x, z, __VA_ARGS__);
+#define dn(x,z,...)	pTrace->SendEvent(LOG_NORMAL, x, z, __VA_ARGS__);
+#define dw(x,z,...)	pTrace->SendEvent(LOG_WARNING, x, z, __VA_ARGS__);
+#define dmi(x,z,...)	pTrace->SendEvent(LOG_MINOR, x, z, __VA_ARGS__);
+#define dma(x,z,...)	pTrace->SendEvent(LOG_MAJOR, x, z, __VA_ARGS__);
+#define dc(x,z,...)	pTrace->SendEvent(LOG_WARNING, x, z, __VA_ARGS__);
+
 
 namespace utils
 {
@@ -75,15 +103,15 @@ namespace utils
 
 	inline const wchar_t *str_to_severity(const wchar_t *str)
 	{
-		if (wcsicmp(str, L"critical") == 0)
+		if (_wcsicmp(str, L"critical") == 0)
 			return L"Critical";
-		else if (wcsicmp(str, L"major") == 0)
+		else if (_wcsicmp(str, L"major") == 0)
 			return L"Major";
-		else if (wcsicmp(str, L"minor") == 0)
+		else if (_wcsicmp(str, L"minor") == 0)
 			return L"Minor";
-		else if (wcsicmp(str, L"warning") == 0)
+		else if (_wcsicmp(str, L"warning") == 0)
 			return L"Warning";
-		else if (wcsicmp(str, L"normal") == 0)
+		else if (_wcsicmp(str, L"normal") == 0)
 			return L"Normal";
 		else
 			return L"Unknown";
@@ -91,15 +119,15 @@ namespace utils
 
 	inline const wchar_t *str_to_severity(const char *str)
 	{
-		if (stricmp(str, "critical") == 0)
+		if (_stricmp(str, "critical") == 0)
 			return L"Critical";
-		else if (stricmp(str, "major") == 0)
+		else if (_stricmp(str, "major") == 0)
 			return L"Major";
-		else if (stricmp(str, "minor") == 0)
+		else if (_stricmp(str, "minor") == 0)
 			return L"Minor";
-		else if (stricmp(str, "warning") == 0)
+		else if (_stricmp(str, "warning") == 0)
 			return L"Warning";
-		else if (stricmp(str, "normal") == 0)
+		else if (_stricmp(str, "normal") == 0)
 			return L"Normal";
 		else
 			return L"Unknown";

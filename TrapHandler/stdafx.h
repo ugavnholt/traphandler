@@ -12,7 +12,7 @@
 #include <conio.h>
 #include "resource.h"
 #include "TraceEngine.h"
-#include <atldbcli.h>
+// #include <atldbcli.h>
 
 // config values
 extern int SNMPQUEUELENGTH;			// buffer up to 1.000.000 snmp traps for processing
@@ -29,8 +29,8 @@ extern FILETIME LastHBTime;	// Time of last activity, used for heart beat
 #define MAX_CMD 2048				// the maximum length of a command line string
 
 extern FILETIME lastConfigUpdateTime;
-extern CSession *configSession;
-extern CSession *metricSession;
+//extern CSession *configSession;
+//extern CSession *metricSession;
 extern const wchar_t *wcsTrapHandlerRegKey;
 extern wchar_t *wcsConnectionString;
 extern wchar_t *wcsInstallPath;
@@ -41,25 +41,3 @@ extern wchar_t *wcsapp(wchar_t *str1, const wchar_t *str2);
 extern HANDLE hQuitEvent;	// global handle to our quit flag
 							// global flag, determines whether we should print output
 
-// #define print(x,...) if(bDebug) {_print(x,__VA_ARGS__);}
-#define print(x,z,...) pTrace->SendEvent(LOG_DEBUG, x, z, __VA_ARGS__);
-inline void _print(const wchar_t *format,...)
-{
-	if(!bDebug)
-		return;
-
-	va_list argList;
-	va_start(argList, format);
-
-	vwprintf(format, argList);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-// Debug macros
-// z = message
-#define dd(x,z,...)	pTrace->SendEvent(LOG_DEBUG, x, z, __VA_ARGS__);
-#define dn(x,z,...)	pTrace->SendEvent(LOG_NORMAL, x, z, __VA_ARGS__);
-#define dw(x,z,...)	pTrace->SendEvent(LOG_WARNING, x, z, __VA_ARGS__);
-#define dmi(x,z,...)	pTrace->SendEvent(LOG_MINOR, x, z, __VA_ARGS__);
-#define dma(x,z,...)	pTrace->SendEvent(LOG_MAJOR, x, z, __VA_ARGS__);
-#define dc(x,z,...)	pTrace->SendEvent(LOG_WARNING, x, z, __VA_ARGS__);

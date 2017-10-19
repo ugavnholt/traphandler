@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "utils.h"
 #include "trapReceiver.h"
 #include "asn1parsers.h"
 

@@ -46,6 +46,6 @@ namespace traphandler
 			std::vector<Threshold> m_thresholds;
 		private:
 			nanodbc::connection &conn;
-		};
-	}
-}
+		}; // class TrapHandlerModel
+	} // namespace model
+} // namespace traphandler

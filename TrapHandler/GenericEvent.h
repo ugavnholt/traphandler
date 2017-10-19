@@ -12,7 +12,6 @@ namespace traphandler
 		{
 		public:
 			std::wstring oid;
-			std::wstring hostname;
 			std::wstring source_ip;
 			std::vector<std::wstring> args;
 
