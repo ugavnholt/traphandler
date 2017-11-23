@@ -20,9 +20,7 @@ int THRESHUPDATEINTSECS=5;		// The interval between which thresholds are updated
 
 FILETIME LastHBTime;	// Time of last activity, used for heart beat
 
-BOOL bDebug = true;
 BOOL bDoShutdown = false;	// Global shutdown flag
-HANDLE hQuitEvent = INVALID_HANDLE_VALUE;	// global handle to our quit flag
 CTraceEngine *pTrace = NULL;
 
 wchar_t *wcsapp(wchar_t *str1, const wchar_t *str2)

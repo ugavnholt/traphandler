@@ -1,34 +1,8 @@
 #pragma once
 
-#include "stdafx.h"
 #include <string>
 #include <cctype>
-
-#ifndef __DEBUG_PRINT
-#define __DEBUG_PRINT
-// #define print(x,...) if(bDebug) {_print(x,__VA_ARGS__);}
-#define print(x,z,...) pTrace->SendEvent(LOG_DEBUG, x, z, __VA_ARGS__);
-inline void _print(const wchar_t *format, ...)
-{
-	if (!bDebug)
-		return;
-
-	va_list argList;
-	va_start(argList, format);
-
-	vwprintf(format, argList);
-}
-#endif
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-// Debug macros
-// z = message
-#define dd(x,z,...)	pTrace->SendEvent(LOG_DEBUG, x, z, __VA_ARGS__);
-#define dn(x,z,...)	pTrace->SendEvent(LOG_NORMAL, x, z, __VA_ARGS__);
-#define dw(x,z,...)	pTrace->SendEvent(LOG_WARNING, x, z, __VA_ARGS__);
-#define dmi(x,z,...)	pTrace->SendEvent(LOG_MINOR, x, z, __VA_ARGS__);
-#define dma(x,z,...)	pTrace->SendEvent(LOG_MAJOR, x, z, __VA_ARGS__);
-#define dc(x,z,...)	pTrace->SendEvent(LOG_WARNING, x, z, __VA_ARGS__);
+#include <windows.h>
 
 
 namespace utils
@@ -40,6 +14,67 @@ namespace utils
 	const wchar_t *str_to_severity(const wchar_t *str);
 	const wchar_t *str_to_severity(const char *str);
 	void remove_str_quotes_and_back_spaces(wchar_t *str);
+	uint64_t fttoull(const FILETIME &ft);
+	bool replace(std::string& str, const std::string& from, const std::string& to);
+	bool replace(std::wstring& str, const std::wstring& from, const std::wstring& to);
+	void replaceAll(std::string& str, const std::string& from, const std::string& to);
+	void replaceAll(std::wstring& str, const std::wstring& from, const std::wstring& to);
+	uint64_t unixtime2filetime(uint64_t unix_time);
+
+	inline uint64_t unixtime2filetime(uint64_t unix_time)
+	{
+		uint64_t file_time = unix_time;
+		file_time *= FTCLICKSQERSEC;
+		file_time += 116444736000000000;
+		return file_time;
+	}
+
+	inline void replaceAll(std::string& str, const std::string& from, const std::string& to) 
+	{
+		if (from.empty())
+			return;
+		size_t start_pos = 0;
+		while ((start_pos = str.find(from, start_pos)) != std::string::npos) {
+			str.replace(start_pos, from.length(), to);
+			start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+		}
+	}
+
+	inline void replaceAll(std::wstring& str, const std::wstring& from, const std::wstring& to)
+	{
+		if (from.empty())
+			return;
+		size_t start_pos = 0;
+		while ((start_pos = str.find(from, start_pos)) != std::wstring::npos) {
+			str.replace(start_pos, from.length(), to);
+			start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+		}
+	}
+
+	inline bool replace(std::string& str, const std::string& from, const std::string& to) 
+	{
+		size_t start_pos = str.find(from);
+		if (start_pos == std::string::npos)
+			return false;
+		str.replace(start_pos, from.length(), to);
+		return true;
+	}
+
+	inline bool replace(std::wstring& str, const std::wstring& from, const std::wstring& to)
+	{
+		size_t start_pos = str.find(from);
+		if (start_pos == std::wstring::npos)
+			return false;
+		str.replace(start_pos, from.length(), to);
+		return true;
+	}
+
+	inline uint64_t fttoull(const FILETIME &ft)
+	{
+		uint64_t retVal = ft.dwHighDateTime;
+		retVal = retVal << 32;
+		return  (retVal += ft.dwLowDateTime);
+	}
 
 	struct iequal
 	{

@@ -14,6 +14,9 @@ static const wchar_t *wcsMinor = L"MINO-";
 static const wchar_t *wcsMajor = L"MAJO-";
 static const wchar_t *wcsCritical = L"CRIT-";
 
+bool bDebug = false;
+CTraceEngine *pTrace = nullptr;
+
 #pragma warning (disable : 4996)
 
 int CTraceEngine::FormatMessage(int severity, const wchar_t *facility, const wchar_t *message)
@@ -21,18 +24,18 @@ int CTraceEngine::FormatMessage(int severity, const wchar_t *facility, const wch
 	SYSTEMTIME stNow;
 	GetSystemTime(&stNow);
 
-	const wchar_t *sev;
-	if(severity == LOG_DEBUG)
+	const wchar_t *sev = L"UNKNOWN";
+	if (severity == LOG_DEBUG)
 		sev = wcsDebug;
-	else if(severity = LOG_NORMAL)
+	else if (severity = LOG_NORMAL)
 		sev = wcsNormal;
-	else if(severity = LOG_WARNING)
+	else if (severity = LOG_WARNING)
 		sev = wcsWarning;
-	else if(severity = LOG_MINOR)
+	else if (severity = LOG_MINOR)
 		sev = wcsMinor;
-	else if(severity = LOG_MAJOR)
+	else if (severity = LOG_MAJOR)
 		sev = wcsMajor;
-	else if(severity = LOG_CRITICAL)
+	else if (severity = LOG_CRITICAL)
 		sev = wcsCritical;
 
 	int strLen = swprintf(pTraceEngine->msgBuf, pTraceEngine->uMaxMsgSize+50, L"%04u%02u%02u %02u:%02u:%02u %s%s: %s\r\n", 
@@ -167,7 +170,7 @@ void CTraceEngine::SendEvent(int severity, const wchar_t *facility, const wchar_
 	}
 
 	int msgLen;
-	const wchar_t *pSev;
+	const wchar_t *pSev = L"UNKNOWN";
 	wchar_t *pTmp;
 	if(severity == LOG_DEBUG)
 		pSev = wcsDebug;
@@ -191,7 +194,7 @@ void CTraceEngine::SendEvent(int severity, const wchar_t *facility, const wchar_
 	SPINLOCKT(slTraceEngine, 0);
 #endif
 
-	msgLen = swprintf(pTraceEngine->msgBuf, 50, L"%02u%02u %02u:%02u:%02u %s%s: ", 
+	msgLen = swprintf(pTraceEngine->msgBuf, 50, L"%02u-%02u %02u:%02u:%02u %s%s: ", 
 		stNow.wMonth, stNow.wDay, stNow.wHour, stNow.wMinute, stNow.wSecond, pSev, facility);
 
 	pTmp = pTraceEngine->msgBuf+msgLen;

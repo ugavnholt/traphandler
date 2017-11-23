@@ -11,7 +11,7 @@
 #include <wchar.h>
 #include <conio.h>
 #include "resource.h"
-#include "TraceEngine.h"
+#include "debugheaders.h"
 // #include <atldbcli.h>
 
 // config values
@@ -34,10 +34,7 @@ extern FILETIME lastConfigUpdateTime;
 extern const wchar_t *wcsTrapHandlerRegKey;
 extern wchar_t *wcsConnectionString;
 extern wchar_t *wcsInstallPath;
-extern BOOL bDebug;
 extern BOOL bDoShutdown;
 extern CTraceEngine *pTrace;
 extern wchar_t *wcsapp(wchar_t *str1, const wchar_t *str2);
-extern HANDLE hQuitEvent;	// global handle to our quit flag
-							// global flag, determines whether we should print output
 

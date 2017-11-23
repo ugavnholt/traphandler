@@ -22,7 +22,7 @@
     <ProjectGuid>{6109BE3B-2114-49DF-983E-D619510D58F7}</ProjectGuid>
     <RootNamespace>TrapHandler</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -73,6 +73,14 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;C:\traphandler_1.7\contrib\poco-1.8.0.1-all\lib64</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\traphandler_1.7\contrib\poco-1.8.0.1-all\Data\include;C:\traphandler_1.7\contrib\poco-1.8.0.1-all\Foundation\include;C:\traphandler_1.7\contrib\poco-1.8.0.1-all\Data\include;C:\traphandler_1.7\contrib\poco-1.8.0.1-all\Data\ODBC\include;</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;C:\traphandler_1.7\contrib\poco-1.8.0.1-all\lib64</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\traphandler_1.7\contrib\poco-1.8.0.1-all\Data\include;C:\traphandler_1.7\contrib\poco-1.8.0.1-all\Foundation\include;C:\traphandler_1.7\contrib\poco-1.8.0.1-all\Data\include;C:\traphandler_1.7\contrib\poco-1.8.0.1-all\Data\ODBC\include;</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -145,7 +153,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -175,7 +183,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="strMatch.cpp" />
     <ClCompile Include="TraceEngine.cpp" />
     <ClCompile Include="TrapHandler.cpp" />
     <ClCompile Include="trapReceiver.cpp" />
@@ -184,10 +191,12 @@
     <ClInclude Include="AgentEvent.h" />
     <ClInclude Include="AgentEventFactory.h" />
     <ClInclude Include="asn1parsers.h" />
+    <ClInclude Include="atomicops.h" />
     <ClInclude Include="ClusterFailEvent.h" />
     <ClInclude Include="CmdQueue.h" />
     <ClInclude Include="CSnmpTrap.h" />
     <ClInclude Include="DBUtil.h" />
+    <ClInclude Include="debugheaders.h" />
     <ClInclude Include="DiskMetricEvent.h" />
     <ClInclude Include="ErrorEvent.h" />
     <ClInclude Include="ExecObj.h" />
@@ -201,21 +210,25 @@
     <ClInclude Include="HostControl.h" />
     <ClInclude Include="HostInfo.h" />
     <ClInclude Include="nanodbc.h" />
+    <ClInclude Include="odbcStore.h" />
     <ClInclude Include="ProcessFailEvent.h" />
     <ClInclude Include="Proxies.h" />
     <ClInclude Include="ProxyConf.h" />
+    <ClInclude Include="readerwriterqueue.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
     <ClInclude Include="Service.h" />
     <ClInclude Include="ServiceFailEvent.h" />
     <ClInclude Include="snmpOid.h" />
     <ClInclude Include="StartMaintenanceEvent.h" />
+    <ClInclude Include="Status.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="strMatch.h" />
+    <ClInclude Include="StoreInterface.h" />
     <ClInclude Include="Threshold.h" />
     <ClInclude Include="Thresholds.h" />
     <ClInclude Include="ThresholdService.h" />
     <ClInclude Include="TimerObj.h" />
+    <ClInclude Include="TimerService.h" />
     <ClInclude Include="TraceEngine.h" />
     <ClInclude Include="TrapHandler.h" />
     <ClInclude Include="TrapHandlerModel.h" />

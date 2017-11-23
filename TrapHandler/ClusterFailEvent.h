@@ -14,18 +14,22 @@ namespace traphandler
 			std::wstring state;
 			std::wstring to_wstring() const override
 			{
-				std::wstring msg(L"ClusterFailEvent");
-
-				dd(L"SNMP  ", L"cluster state event from %s(%s) - resource group: %s, cluster name: %s, state: %s\r\n",
-					pHostName,
-					pPlatformID,
-					pResGroup,
-					pCluName,
-					pState);
+				std::wstring msg(L"cluster state event from ");
+				msg += hostname;
+				msg += L"(";
+				msg += platformId;
+				msg += L") - resource group: ";
+				msg += resourceGroup;
+				msg += L", cluster name: ";
+				msg += clusterName;
+				msg += L", state: ";
+				msg += state;
 				return msg;
 			}
 			std::wstring to_cmd_str() const override 
 			{
+				std::wstring cmd;
+				return cmd;
 			}
 			bool ParseTrap(const CSnmpTrap& source_trap) override 
 			{

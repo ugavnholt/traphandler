@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include "stdafx.h"
-
 #include <windows.h>
 #include <wchar.h>
 

@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TrapHandler", "TrapHandler\TrapHandler.vcxproj", "{6109BE3B-2114-49DF-983E-D619510D58F7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TrapHandlerTests", "TrapHandlerTests\TrapHandlerTests.vcxproj", "{B5AECAE6-1115-4B51-8346-373A5E1326CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,14 @@ Global
 		{6109BE3B-2114-49DF-983E-D619510D58F7}.Release|Win32.Build.0 = Release|Win32
 		{6109BE3B-2114-49DF-983E-D619510D58F7}.Release|x64.ActiveCfg = Release|x64
 		{6109BE3B-2114-49DF-983E-D619510D58F7}.Release|x64.Build.0 = Release|x64
+		{B5AECAE6-1115-4B51-8346-373A5E1326CD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B5AECAE6-1115-4B51-8346-373A5E1326CD}.Debug|Win32.Build.0 = Debug|Win32
+		{B5AECAE6-1115-4B51-8346-373A5E1326CD}.Debug|x64.ActiveCfg = Debug|x64
+		{B5AECAE6-1115-4B51-8346-373A5E1326CD}.Debug|x64.Build.0 = Debug|x64
+		{B5AECAE6-1115-4B51-8346-373A5E1326CD}.Release|Win32.ActiveCfg = Release|Win32
+		{B5AECAE6-1115-4B51-8346-373A5E1326CD}.Release|Win32.Build.0 = Release|Win32
+		{B5AECAE6-1115-4B51-8346-373A5E1326CD}.Release|x64.ActiveCfg = Release|x64
+		{B5AECAE6-1115-4B51-8346-373A5E1326CD}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

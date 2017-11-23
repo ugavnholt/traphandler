@@ -10,22 +10,25 @@ namespace traphandler
 	class CmdQueue
 	{
 	public:
-		void QueueCommand(
-			traphandler::events::AgentEvent &event,
-			traphandler::model::TrapHandlerModel &model);
+		void QueueCommand(const std::wstring& cmd);
 		inline bool isEmpty() const { return cmdQueue.empty(); }
 		~CmdQueue();
 
 		void ProcessQueue();
 		void ProcessCommands();
 		inline size_t GetExecutedCommands() const { return dwExecutedCommands; }
-
+		void Shutdown();
 	private:
 		concurrency::concurrent_queue<ExecObj*> cmdQueue;
 		std::list<ExecObj*> runningCommands;
 		size_t nCommands = 0;
 		size_t dwExecutedCommands = 0;
 	};
+
+	inline void Shutdown()
+	{
+
+	}
 
 	inline void CmdQueue::ProcessQueue()
 	{
@@ -98,11 +101,8 @@ namespace traphandler
 		}
 	}
 
-	inline void CmdQueue::QueueCommand(
-		traphandler::events::AgentEvent &event,
-		traphandler::model::TrapHandlerModel &model)
+	inline void CmdQueue::QueueCommand(const std::wstring& cmd)
 	{
-		std::wstring cmd = event.ProcessTrap(model);
 		if (!cmd.empty())
 		{
 			ExecObj *newCmd = new ExecObj();

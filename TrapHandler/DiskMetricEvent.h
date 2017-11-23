@@ -43,12 +43,6 @@ public:
 		msg += L"mb, free space: ";
 		msg += std::to_wstring(availableSpaceMb);
 		msg += L"mb";
-		//dd(L"SNMP  ", L"Received disk metric from %s(%s) - volume: %s, Totspace: %s, freespace: %s\r\n",
-		//	pHostName,
-		//	pPlatformID,
-		//	pFSName,
-		//	pTotSpace,  // tot space
-		//	pFreeSpace); // free space
 		return msg;
 	}
 	bool ParseTrap(const CSnmpTrap& source_trap) override
@@ -85,18 +79,17 @@ public:
 			{
 				return false;
 			}
+			// check for conversion errors from the _wcstoi64 calls
+			if (fsSizeMb == _I64_MAX || fsSizeMb == _I64_MIN || availableSpaceMb == _I64_MAX || availableSpaceMb == _I64_MIN)
+				return false;
 
-					
-			__int64 TotDiskSpace = 0, FreeDiskSpace = 0;
-			TotDiskSpace = _wtoi64(pTotSpace);
-			FreeDiskSpace = _wtoi64(pFreeSpace);
-
+			// calculate utilization percent
 			double utilPercent = -1.0f;
-			if (TotDiskSpace > 0)
+			if (fsSizeMb > 0)
 			{
 				// double utilPercent = 100.0f - ( ((double)FreeDiskSpace/(double)TotDiskSpace) * 100.0f );
-				utilPercent = (double)FreeDiskSpace;
-				utilPercent /= TotDiskSpace;
+				utilPercent = (double)availableSpaceMb;
+				utilPercent /= fsSizeMb;
 				utilPercent *= 100.0f;
 				utilPercent = 100.0f - utilPercent;
 			}

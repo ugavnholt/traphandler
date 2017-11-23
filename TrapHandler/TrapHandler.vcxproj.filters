@@ -39,9 +39,6 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="strMatch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TraceEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -78,9 +75,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Thresholds.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TimerObj.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TraceEngine.h">
@@ -123,9 +117,6 @@
       <Filter>Header Files\SnmpParser</Filter>
     </ClInclude>
     <ClInclude Include="snmpOid.h">
-      <Filter>Header Files\SnmpParser</Filter>
-    </ClInclude>
-    <ClInclude Include="strMatch.h">
       <Filter>Header Files\SnmpParser</Filter>
     </ClInclude>
     <ClInclude Include="trapReceiver.h">
@@ -175,6 +166,30 @@
     </ClInclude>
     <ClInclude Include="CmdQueue.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerService.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerObj.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="debugheaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="readerwriterqueue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="atomicops.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StoreInterface.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="odbcStore.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Status.h">
+      <Filter>Header Files\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

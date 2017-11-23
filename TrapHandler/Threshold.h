@@ -21,7 +21,8 @@ public:
 		util_high = 200,
 		mb_high = 201
 	};
-	Threshold(long freeMBWarn, 
+	Threshold(long Id,
+		long freeMBWarn, 
 		long freeMBHigh, 
 		double utilWarn, 
 		double utilHigh, 
@@ -31,6 +32,7 @@ public:
 		std::wstring &volExpression,
 		long minFSSize,
 		long maxFSSize) :
+		id(Id),
 		WarnFreeMegsThresh(freeMBWarn),
 		HighFreeMegsThresh(freeMBHigh),
 		WarnUtilThresh(utilWarn),
@@ -163,7 +165,8 @@ public:
 	}
 
 	~Threshold() {}
-	
+	long id = 0;
+
 	int64_t HighFreeMegsThresh = 0;
 	int64_t WarnFreeMegsThresh = 0;
 

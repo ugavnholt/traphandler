@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Status.h"
+
 namespace traphandler
 {
 	namespace model
@@ -7,21 +9,20 @@ namespace traphandler
 class Host
 {
 public:
-	uuid_t id;
+	int id;
 	std::wstring hostname;
 	std::wstring ip;
 	std::wstring ugmonVersion;
 	std::wstring versionString;
 	int osVersionMajor;
 	int osVersionMinor;
-	int osVersionBuild;
+	std::wstring osVersionBuild;
 	int servicePack;
 	std::wstring architecture;
-	FILETIME ftFirstSeenTime;
-	FILETIME ftLastHelloTime;
 	std::wstring proxyHostName;
 	std::wstring platform;
-	int status;
+	Status status;
+	uint64_t statusChangeTime;
 };
 
 	}
