@@ -1,0 +1,70 @@
+host id changed from uuid to auto assigned id - db update
+filesystems has added statuschangetime - defaults to getutcdate()
+host firstSeenTime default value = getutcdate()
+new field host.LastKnownStatus, default value = 0
+new field host.statusChangeTime, default value = getutcdate()
+host.firstseentime default value = getutcdate()
+
+
+Thresholds:
+SELECT \
+		TreshFreeMBWarn, \
+		ThreshFreeMBHigh, \
+		ThreshUtilWarn, \
+		ThreshUtilHigh, \
+		WarnSev, \
+		highSev, \
+		HostExpression, \
+		VolumeExpression, \
+		MinFSSizeMB, \
+		MaxFSSizeMB \
+		FROM dbo.FSThresholds ORDER BY EvalOrder")
+
+Proxies:
+LONG m_SNMPQueueLength;
+	LONG m_CommandQueueLength;
+	LONG m_HeartBeatTimeoutSecs;
+	LONG m_MaxConcurrentCommands;
+	LONG m_ConfigUpdateIntervalSecs;
+	wchar_t m_LogMinSeverity[21];
+	DBTIMESTAMP m_ThreshChangeTime;
+
+HostSelect:
+	SELECT ID, LocalHostName, LastSeenIP, LastKnownStatus from Hosts
+
+L"INSERT INTO dbo.hosts \
+(ID, LocalHostName, LastSeenIP, UGMonVersion, VersionString, OSVersionMajor, OSVersionMinor, OSVersionBuild, \
+ServicePack, Architecture, ProxyHostName, Platform) VALUES (NEWID(),LOWER('");
+
+UPDATE dbo.hosts SET LastSeenIP='");
+        p = wcsapp(p, SourceIP);
+        p = wcsapp(p, L"',UGMonVersion='");
+        p = wcsapp(p, UgmonVer);
+        p = wcsapp(p, L"',versionString='");
+        p = wcsapp(p, pVer);
+        p = wcsapp(p, L"',OSVersionMajor='");
+        _itow(dwMajorVer, tmpStr, 10);
+        p = wcsapp(p, tmpStr); //dwMajorVer
+        p = wcsapp(p, L"',OSVersionMinor='");
+        _itow(dwMinorVer, tmpStr, 10);
+        p = wcsapp(p, tmpStr); // dwMinorVer
+        p = wcsapp(p, L"',OSVersionBuild='");
+        p = wcsapp(p, Build);
+        p = wcsapp(p, L"',ServicePack='");
+        _itow(dwSPLevel, tmpStr, 10);
+        p = wcsapp(p, tmpStr); //dwSPLevel
+        p = wcsapp(p, L"',Architecture='");
+        p = wcsapp(p, Architecture);
+        p = wcsapp(p, L"',ProxyHostName='");
+        p = wcsapp(p, proxyHostName);
+        p = wcsapp(p, L"',Platform='");
+        p = wcsapp(p, platform);
+        p = wcsapp(p, L"', LastHelloTime=GETDATE() WHERE ID='");
+        swprintf(tmpStr, 39, L"%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x", ID.Data1, ID.Data2, ID.Data3,
+            ID.Data4[0], ID.Data4[1], ID.Data4[2], ID.Data4[3], ID.Data4[4], ID.Data4[5], ID.Data4[6], ID.Data4[7]);
+        p = wcsapp(p, tmpStr);
+        p = wcsapp(p, L"'");
+
+
+
+

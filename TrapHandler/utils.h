@@ -3,7 +3,12 @@
 #include <string>
 #include <cctype>
 #include <windows.h>
+#include <locale>
+#include <codecvt>
 
+#ifndef FTCLICKSQERSEC
+#define FTCLICKSQERSEC 10000000
+#endif
 
 namespace utils
 {
@@ -20,6 +25,27 @@ namespace utils
 	void replaceAll(std::string& str, const std::string& from, const std::string& to);
 	void replaceAll(std::wstring& str, const std::wstring& from, const std::wstring& to);
 	uint64_t unixtime2filetime(uint64_t unix_time);
+	void to_upper(std::wstring str);
+	void to_upper(std::string str);
+	void to_lower(std::wstring str);
+	void to_lower(std::string str);
+
+
+	inline std::wstring s2ws(const std::string& str)
+	{
+		using convert_typeX = std::codecvt_utf8<wchar_t>;
+		std::wstring_convert<convert_typeX, wchar_t> converterX;
+
+		return converterX.from_bytes(str);
+	}
+
+	inline std::string ws2s(const std::wstring& wstr)
+	{
+		using convert_typeX = std::codecvt_utf8<wchar_t>;
+		std::wstring_convert<convert_typeX, wchar_t> converterX;
+
+		return converterX.to_bytes(wstr);
+	}
 
 	inline uint64_t unixtime2filetime(uint64_t unix_time)
 	{
@@ -84,6 +110,38 @@ namespace utils
 			return std::toupper(c1) == std::toupper(c2);
 		}
 	};
+
+	inline void to_upper(std::wstring str)
+	{
+		for (auto it = str.begin(); it != str.end(); it++)
+		{
+			*it = std::toupper(*it);
+		}
+	}
+
+	inline void to_upper(std::string str)
+	{
+		for (auto it = str.begin(); it != str.end(); it++)
+		{
+			*it = std::toupper(*it);
+		}
+	}
+
+	inline void to_lower(std::wstring str)
+	{
+		for (auto it = str.begin(); it != str.end(); it++)
+		{
+			*it = std::tolower(*it);
+		}
+	}
+
+	inline void to_lower(std::string str)
+	{
+		for (auto it = str.begin(); it != str.end(); it++)
+		{
+			*it = std::tolower(*it);
+		}
+	}
 
 	inline void remove_str_quotes_and_back_spaces(wchar_t *str)
 	{

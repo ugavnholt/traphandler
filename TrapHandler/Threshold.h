@@ -21,6 +21,13 @@ public:
 		util_high = 200,
 		mb_high = 201
 	};
+	Threshold()
+	{
+		SetHostExpr(std::wstring(L".*"));
+		SetVolExpr(std::wstring(L".*"));
+		SetHighSeverity(L"CRITICAL");
+		SetWarnSeverity(L"MAJOR");
+	}
 	Threshold(long Id,
 		long freeMBWarn, 
 		long freeMBHigh, 
@@ -69,7 +76,7 @@ public:
 		minFSSize = other.minFSSize;
 		maxFSSize = other.maxFSSize;
 	}
-	inline void SetHostExpr(std::wstring &host_expression)
+	inline void SetHostExpr(const std::wstring &host_expression)
 	{
 		hostExpr.assign(host_expression, std::regex::ECMAScript |
 			std::regex::icase |
@@ -77,7 +84,7 @@ public:
 			std::regex::optimize);
 		hostExprStr = host_expression;
 	}
-	inline void SetVolExpr(std::wstring &volume_expression)
+	inline void SetVolExpr(const std::wstring &volume_expression)
 	{
 		volExpr.assign(volume_expression, std::regex::ECMAScript |
 			std::regex::icase | 
@@ -99,7 +106,7 @@ public:
 	{
 		wchar_t buf[2048];
 		swprintf_s(buf, sizeof(buf)/sizeof(buf[0]), 
-			L"Threshold %s:%s warn/high mb(%I64i/%I64i) util(%.2f/%.2f) - minFSSizeMB: %I64i, maxFSSizeMB: %I64i",
+			L"Threshold %s:%s warn/high mb(%I64i/%I64i), util(%.2f/%.2f) - minFSSizeMB: %I64i, maxFSSizeMB: %I64i",
 			hostExprStr.c_str(), volExprStr.c_str(),
 			WarnFreeMegsThresh, HighFreeMegsThresh,
 			WarnUtilThresh, HighUtilThresh,
@@ -111,7 +118,7 @@ public:
 	{
 		char buf[2048];
 		sprintf_s(buf, sizeof(buf) / sizeof(buf[0]),
-			"Threshold %S:%S warn/high mb(%I64i/%I64i) util(%.2f/%.2f) - minFSSizeMB: %I64i, maxFSSizeMB: %I64i",
+			"Threshold %S:%S warn/high mb(%I64i/%I64i), util(%.2f/%.2f) - minFSSizeMB: %I64i, maxFSSizeMB: %I64i",
 			hostExprStr.c_str(), volExprStr.c_str(),
 			WarnFreeMegsThresh, HighFreeMegsThresh,
 			WarnUtilThresh, HighUtilThresh,
@@ -178,11 +185,12 @@ public:
 
 	int64_t minFSSize = 0; 
 	int64_t maxFSSize = 0;
+
+	std::wstring hostExprStr;
+	std::wstring volExprStr;
 private:
 	std::wregex hostExpr;
 	std::wregex volExpr;
-	std::wstring hostExprStr;
-	std::wstring volExprStr;
 };
 
 	} // namespace model

@@ -16,9 +16,6 @@
     <Filter Include="Header Files\Model">
       <UniqueIdentifier>{2f98c846-8ee1-4771-a809-45da4cebfac8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\nanodbc">
-      <UniqueIdentifier>{4d3e78c3-1b49-4f15-8a9f-0325b139c63a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Service">
       <UniqueIdentifier>{3a6bd4ce-5901-4f2e-931d-e9b2b5eb4569}</UniqueIdentifier>
     </Filter>
@@ -46,9 +43,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="trapReceiver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="nanodbc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -94,9 +88,6 @@
     </ClInclude>
     <ClInclude Include="resource1.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="nanodbc.h">
-      <Filter>Header Files\nanodbc</Filter>
     </ClInclude>
     <ClInclude Include="Threshold.h">
       <Filter>Header Files\Model</Filter>
@@ -185,11 +176,26 @@
     <ClInclude Include="StoreInterface.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
-    <ClInclude Include="odbcStore.h">
-      <Filter>Header Files\Model</Filter>
-    </ClInclude>
     <ClInclude Include="Status.h">
       <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="pocoOdbcStore.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="nullable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NotificationInterface.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="VoidNotification.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="opcNotificationHandler.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdQueueInterface.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -22,10 +22,10 @@ namespace traphandler
 {
 	namespace model
 	{
-		class odbcStore : public StoreInterface
+		class PocoOdbcStore : public StoreInterface
 		{
 		public:	
-			~odbcStore()
+			~PocoOdbcStore()
 			{
 				Disconnect();
 			}

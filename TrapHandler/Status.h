@@ -55,6 +55,16 @@ public:
 	{
 		status = (int)eStatusValue::Normal;
 	}
+	Status &operator=(const eStatusValue newStatus)
+	{
+		status = (int)newStatus;
+		return *this;
+	}
+	Status &operator=(const int &newStatus)
+	{
+		setStatus(newStatus);
+		return *this;
+	}
 };
 
 	}

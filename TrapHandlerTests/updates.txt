@@ -1,0 +1,8 @@
+host id changed from uuid to auto assigned id - db update (identity column, primary key)
+filesystems has added statuschangetime - defaults to getutcdate()
+host firstSeenTime default value = getutcdate()
+new field host.LastKnownStatus, default value = 0
+new field host.statusChangeTime, default value = getutcdate()
+host.firstseentime default value = getutcdate()
+filesystem - lastusedthresholdId defaults to -1
+

@@ -2,9 +2,10 @@
 
 #include "TestInterface.h"
 #include <Windows.h>
-#include "../TrapHandler/nanodbc.cpp"
-#include "../TrapHandler/odbcStore.h"
+#include "../TrapHandler/PocoOdbcStore.h"
 #include "../TrapHandler/TrapHandlerModel.h"
+#include <exception>
+#include <assert.h>
 
 namespace traphandler
 {
@@ -27,8 +28,6 @@ namespace traphandler
 				{
 					if (!Model.initialize())
 						return false;
-					if (!ConnectDatabase())
-						return false;
 					if (!LoadConfig())
 						return false;
 					if (!LoadCache())
@@ -36,6 +35,8 @@ namespace traphandler
 					if (!TestStatus())
 						return false;
 					if (!CreateHosts())
+						return false;
+					if (!CreateFs())
 						return false;
 					Store.Disconnect();
 				}
@@ -49,23 +50,6 @@ namespace traphandler
 			}
 
 		private:
-			bool ConnectDatabase()
-			{
-				wprintf(L"Connecting to database...\r\n");
-
-				try
-				{
-					Store.Connect(std::wstring(
-						L"Driver={SQL Server};Server=.\\testdb;Database=traphandler;Trusted_Connection = Yes;"));
-				}
-				catch (std::exception& e)
-				{
-					dc(L"STORE", L"Exception connecting to database: %S\r\n", e.what());
-					return false;
-				}
-				
-				return true;
-			}
 			bool LoadConfig()
 			{
 				wprintf(L"Loading proxy configuration...\r\n");
@@ -94,13 +78,13 @@ namespace traphandler
 			}
 			bool CreateHosts()
 			{
-				wprintf(L"Creating 1000 hosts...\r\n");
-				for (int i = 0; i < 1000; i++)
+				wprintf(L"Creating 100 hosts...\r\n");
+				for (int i = 0; i < 100; i++)
 				{
 					traphandler::model::Host NewHost;
 					NewHost.architecture = L"64";
 					wchar_t name[100];
-					swprintf(name, L"host%i", i);
+					swprintf(name, L"hostxxx%i", i);
 					NewHost.hostname = name;
 					NewHost.ip = L"17.17.17.17";
 					NewHost.ugmonVersion = L"1.17";
@@ -115,8 +99,24 @@ namespace traphandler
 				}
 				return true;
 			}
-			traphandler::model::odbcStore Store;
+			bool CreateFs()
+			{
+				wprintf(L"Creating 100 file systems...\r\n");
+				for (int i = 0; i < 100; i++)
+				{
+					traphandler::model::FileSystem newFs;
+					newFs.name = L"/tmp";
+					newFs.freeMb = 700;
+					newFs.size = 1000;
+					newFs.hostId = -1;
+					newFs.thresholdId = -1;
+					Model.CreateFileSystem(newFs);
+				}
+				return true;
+			}
+			traphandler::model::PocoOdbcStore Store;
 			traphandler::model::TrapHandlerModel Model;
+			traphandler::model::VoidNotification NotificationHandler;
 		};
 	}
 }

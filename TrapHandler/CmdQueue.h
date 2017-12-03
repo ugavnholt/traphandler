@@ -1,23 +1,24 @@
 #pragma once
 
 #include "AgentEvent.h"
+#include "CmdQueueInterface.h"
 #include <concurrent_queue.h>
 #include "ExecObj.h"
 #include <list>
 
 namespace traphandler
 {
-	class CmdQueue
+	class CmdQueue : public CmdQueueInterface
 	{
 	public:
-		void QueueCommand(const std::wstring& cmd);
-		inline bool isEmpty() const { return cmdQueue.empty(); }
+		bool QueueCommand(const std::wstring& cmd) override;
+		bool isEmpty() const override { return cmdQueue.empty(); }
 		~CmdQueue();
 
-		void ProcessQueue();
+		void ProcessQueue() override;
 		void ProcessCommands();
 		inline size_t GetExecutedCommands() const { return dwExecutedCommands; }
-		void Shutdown();
+		void Shutdown() override;
 	private:
 		concurrency::concurrent_queue<ExecObj*> cmdQueue;
 		std::list<ExecObj*> runningCommands;
@@ -25,7 +26,7 @@ namespace traphandler
 		size_t dwExecutedCommands = 0;
 	};
 
-	inline void Shutdown()
+	inline void CmdQueue::Shutdown()
 	{
 
 	}

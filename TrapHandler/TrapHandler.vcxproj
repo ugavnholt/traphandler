@@ -111,7 +111,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>msdasc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>msdasc.lib;%(AdditionalDependencies);Iphlpapi.lib</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
@@ -165,7 +165,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>msdasc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>msdasc.lib;%(AdditionalDependencies);Iphlpapi.lib</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -174,7 +174,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="nanodbc.cpp" />
     <ClCompile Include="Service.cpp" />
     <ClCompile Include="snmpOid.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -199,6 +198,7 @@
     <ClInclude Include="debugheaders.h" />
     <ClInclude Include="DiskMetricEvent.h" />
     <ClInclude Include="ErrorEvent.h" />
+    <ClInclude Include="CmdQueueInterface.h" />
     <ClInclude Include="ExecObj.h" />
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="FSThresholds.h" />
@@ -209,8 +209,10 @@
     <ClInclude Include="Host.h" />
     <ClInclude Include="HostControl.h" />
     <ClInclude Include="HostInfo.h" />
-    <ClInclude Include="nanodbc.h" />
-    <ClInclude Include="odbcStore.h" />
+    <ClInclude Include="NotificationInterface.h" />
+    <ClInclude Include="nullable.h" />
+    <ClInclude Include="opcNotificationHandler.h" />
+    <ClInclude Include="pocoOdbcStore.h" />
     <ClInclude Include="ProcessFailEvent.h" />
     <ClInclude Include="Proxies.h" />
     <ClInclude Include="ProxyConf.h" />
@@ -234,6 +236,7 @@
     <ClInclude Include="TrapHandlerModel.h" />
     <ClInclude Include="trapReceiver.h" />
     <ClInclude Include="utils.h" />
+    <ClInclude Include="VoidNotification.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\CreateProxies.sql" />
