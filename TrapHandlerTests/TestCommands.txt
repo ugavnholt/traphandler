@@ -1,0 +1,106 @@
+_v1_
+// Volume sample
+snmptrap -C i -c public -v 2c 127.0.0.1 123 .1.3.6.1.4.1.15282.10.0.2 1.3.6.1.4.1.15282.11.1.0 string testsystem 1.3.6.1.4.1.15282.11.1.0 string volumename 1.3.6.1.4.1.15282.11.1.0 string 11000 1.3.6.1.4.1.15282.11.1.0 string 8000
+
+// process state sample
+snmptrap -C i -c public -v 2c 127.0.0.1 123 .1.3.6.1.4.1.15282.10.0.3 1.3.6.1.4.1.15282.11.1.0 string testsystem 1.3.6.1.4.1.15282.11.1.0 string processname 1.3.6.1.4.1.15282.11.1.0 string currentstate 1.3.6.1.4.1.15282.11.1.0 string normalstate
+
+// service state sample
+snmptrap -C i -c public -v 2c 127.0.0.1 123 .1.3.6.1.4.1.15282.10.0.4 1.3.6.1.4.1.15282.11.1.0 string testsystem 1.3.6.1.4.1.15282.11.1.0 string servicename 1.3.6.1.4.1.15282.11.1.0 string currentstate 1.3.6.1.4.1.15282.11.1.0 string normalstate 1.3.6.1.4.1.15282.11.1.0 string "Service Label"
+
+// cluster state sample
+snmptrap -C i -c public -v 2c 127.0.0.1 123 .1.3.6.1.4.1.15282.10.0.5 1.3.6.1.4.1.15282.11.1.0 string testsystem 1.3.6.1.4.1.15282.11.1.0 string resgroup 1.3.6.1.4.1.15282.11.1.0 string clusname 1.3.6.1.4.1.15282.11.1.0 string state
+
+// Start Maintenance
+snmptrap -C i -c public -v 2c 127.0.0.1 123 .1.3.6.1.4.1.15282.10.0.6 1.3.6.1.4.1.15282.11.1.0 string testsystem 1.3.6.1.4.1.15282.11.1.0 string username 1.3.6.1.4.1.15282.11.1.0 string description 1.3.6.1.4.1.15282.11.1.0 string 3660
+
+// error message
+snmptrap -C i -c public -v 2c 127.0.0.1 123 .1.3.6.1.4.1.15282.10.0.7 1.3.6.1.4.1.15282.11.1.0 string testsystem 1.3.6.1.4.1.15282.11.1.0 string "Error message" 1.3.6.1.4.1.15282.11.1.0 string Critical
+
+// hello message
+snmptrap -C i -c public -v 2c 127.0.0.1 123 .1.3.6.1.4.1.15282.10.0.8 1.3.6.1.4.1.15282.11.1.0 string testsystem
+
+// goodbye message
+snmptrap -C i -c public -v 2c 127.0.0.1 123 .1.3.6.1.4.1.15282.10.0.9 1.3.6.1.4.1.15282.11.1.0 string testsystem
+
+_v2_
+// Volume sample
+snmptrap -C i -c public -v 2c 127.0.0.1 123 .1.3.6.1.4.1.15282.10.0.2 1.3.6.1.4.1.15282.11.1.0 string osi1112 1.3.6.1.4.1.15282.11.1.0 string WIN 1.3.6.1.4.1.15282.11.1.0 string volumename 1.3.6.1.4.1.15282.11.1.0 string 11000 1.3.6.1.4.1.15282.11.1.0 string 8000
+snmptrapgen -c:"public" -v:2c -r:127.0.0.1 -to:.1.3.6.1.4.1.15282.10.0.2 -del:; -vtp:str;str;str;str;str -vid:.1.3.6.1.4.1.15282.11.1.0;.1.3.6.1.4.1.15282.11.1.0;.1.3.6.1.4.1.15282.11.1.0;.1.3.6.1.4.1.15282.11.1.0;.1.3.6.1.4.1.15282.11.1.0 -val:osi1112;WIN;volumename;11000;8000
+
+// process state sample
+snmptrap -C i -c public -v 2c 127.0.0.1 123 .1.3.6.1.4.1.15282.10.0.3 1.3.6.1.4.1.15282.11.1.0 string osi1112 1.3.6.1.4.1.15282.11.1.0 string WIN 1.3.6.1.4.1.15282.11.1.0 string processname 1.3.6.1.4.1.15282.11.1.0 string NOTRUNNING 1.3.6.1.4.1.15282.11.1.0 string RUNNING
+
+// service state sample
+snmptrap -C i -c public -v 2c 127.0.0.1 123 .1.3.6.1.4.1.15282.10.0.4 1.3.6.1.4.1.15282.11.1.0 string testsystem 1.3.6.1.4.1.15282.11.1.0 string WIN 1.3.6.1.4.1.15282.11.1.0 string servicename 1.3.6.1.4.1.15282.11.1.0 string currentstate 1.3.6.1.4.1.15282.11.1.0 string normalstate 1.3.6.1.4.1.15282.11.1.0 string "Service Label"
+
+// cluster state sample
+snmptrap -C i -c public -v 2c 127.0.0.1 123 .1.3.6.1.4.1.15282.10.0.5 1.3.6.1.4.1.15282.11.1.0 string testsystem 1.3.6.1.4.1.15282.11.1.0 string WIN 1.3.6.1.4.1.15282.11.1.0 string resgroup 1.3.6.1.4.1.15282.11.1.0 string clusname 1.3.6.1.4.1.15282.11.1.0 string state
+
+// Start Maintenance
+snmptrap -C i -c public -v 2c 127.0.0.1 123 .1.3.6.1.4.1.15282.10.0.6 1.3.6.1.4.1.15282.11.1.0 string testsystem 1.3.6.1.4.1.15282.11.1.0 string WIN 1.3.6.1.4.1.15282.11.1.0 string username 1.3.6.1.4.1.15282.11.1.0 string description 1.3.6.1.4.1.15282.11.1.0 string 3660
+
+// error message
+snmptrap -C i -c public -v 2c 127.0.0.1 123 .1.3.6.1.4.1.15282.10.0.7 1.3.6.1.4.1.15282.11.1.0 string testsystem 1.3.6.1.4.1.15282.11.1.0 string WIN 1.3.6.1.4.1.15282.11.1.0 string "Error message" 1.3.6.1.4.1.15282.11.1.0 string Critical
+
+// hello message Win1
+snmptrap -C i -c public -v 2c 127.0.0.1 123 .1.3.6.1.4.1.15282.10.0.8 1.3.6.1.4.1.15282.11.1.0 string osi1112 1.3.6.1.4.1.15282.11.1.0 string WIN  1.3.6.1.4.1.15282.11.1.0 string "MSWin:5.2,BUILD:3790,Service Pack 2-x32 Microsoft Windows Server 2003 R2, Enterprise Edition" 1.3.6.1.4.1.15282.11.1.0 string "1.12"
+snmptrapgen -c:"public" -v:2c -r:127.0.0.1 -to:.1.3.6.1.4.1.15282.10.0.8 -del:; -vtp:str;str;str;str -vid:.1.3.6.1.4.1.15282.11.1.0;.1.3.6.1.4.1.15282.11.1.0;.1.3.6.1.4.1.15282.11.1.0;.1.3.6.1.4.1.15282.11.1.0 -val:osi1112;WIN;"MSWin:5.2,BUILD:3790,Service Pack 2-x32 Microsoft Windows Server 2003 R2, Enterprise Edition";"1.12"
+snmptrapgen -c:"public" -v:2c -r:127.0.0.1 -to:.1.3.6.1.4.1.15282.10.0.8 -del:; -vtp:str;str;str;str -vid:.1.3.6.1.4.1.15282.11.1.0;.1.3.6.1.4.1.15282.11.1.0;.1.3.6.1.4.1.15282.11.1.0;.1.3.6.1.4.1.15282.11.1.0 -val:ug-xps;WIN;"MSWin:6.1,BUILD:7600,No Service Pack-x64    Microsoft Windows 7 Ultimate Edition";"1.12"
+snmptrapgen -c:"public" -v:2c -r:127.0.0.1 -to:.1.3.6.1.4.1.15282.10.0.8 -del:; -vtp:str;str;str;str -vid:.1.3.6.1.4.1.15282.11.1.0;.1.3.6.1.4.1.15282.11.1.0;.1.3.6.1.4.1.15282.11.1.0;.1.3.6.1.4.1.15282.11.1.0 -val:osi1155;WIN;"Linux osi1155 2.6.31-14-generic-pae #48-Ubuntu SMP Fri Oct 16 15:22:42 UTC 2009 i686 GNU/Linux";"1.12"
+// Hello win2
+snmptrap -C i -c public -v 2c 127.0.0.1 123 .1.3.6.1.4.1.15282.10.0.8 1.3.6.1.4.1.15282.11.1.0 string ug-xps 1.3.6.1.4.1.15282.11.1.0 string WIN  1.3.6.1.4.1.15282.11.1.0 string "MSWin:6.1,BUILD:7600,No Service Pack-x64    Microsoft Windows 7 Ultimate Edition" 1.3.6.1.4.1.15282.11.1.0 string "1.12"
+// Hello win3
+snmptrap -C i -c public -v 2c 127.0.0.1 123 .1.3.6.1.4.1.15282.10.0.8 1.3.6.1.4.1.15282.11.1.0 string osi1112 1.3.6.1.4.1.15282.11.1.0 string WIN  1.3.6.1.4.1.15282.11.1.0 string "MSWin:5.2,BUILD:3790,Service Pack 2-x32      Microsoft Windows Server 2003 R2, Enterprise Edition" 1.3.6.1.4.1.15282.11.1.0 string "1.12"
+// Linux 1
+snmptrap -C i -c public -v 2c 127.0.0.1 123 .1.3.6.1.4.1.15282.10.0.8 1.3.6.1.4.1.15282.11.1.0 string osi1155 1.3.6.1.4.1.15282.11.1.0 string UX  1.3.6.1.4.1.15282.11.1.0 string "Linux osi1155 2.6.31-14-generic-pae #48-Ubuntu SMP Fri Oct 16 15:22:42 UTC 2009 i686 GNU/Linux" 1.3.6.1.4.1.15282.11.1.0 string "1.12"
+// Linux 2
+snmptrap -C i -c public -v 2c 127.0.0.1 123 .1.3.6.1.4.1.15282.10.0.8 1.3.6.1.4.1.15282.11.1.0 string osi0518 1.3.6.1.4.1.15282.11.1.0 string UX  1.3.6.1.4.1.15282.11.1.0 string "Linux osi0518.de-prod.dk 2.6.18-164.el5 #1 SMP Tue Aug 18 15:51:48 EDT 2009 x86_64 x86_64 x86_64 GNU/Linux" 1.3.6.1.4.1.15282.11.1.0 string "1.12"
+// HPUX 1
+snmptrap -C i -c public -v 2c 127.0.0.1 123 .1.3.6.1.4.1.15282.10.0.8 1.3.6.1.4.1.15282.11.1.0 string openview 1.3.6.1.4.1.15282.11.1.0 string UX  1.3.6.1.4.1.15282.11.1.0 string "HP-UX ux2b B.11.11 U 9000/800 2056945439 unlimited-user license" 1.3.6.1.4.1.15282.11.1.0 string "1.12"
+
+// goodbye message
+snmptrap -C i -c public -v 2c 127.0.0.1 123 .1.3.6.1.4.1.15282.10.0.9 1.3.6.1.4.1.15282.11.1.0 string osi1112 1.3.6.1.4.1.15282.11.1.0 string WIN
+
+//////////////////////////////////
+MB Thresholds
+
+
+Norm-Warn:
+opcmsg a=UGMon o=Threshold msg_t="Hostname='testsystem' threshType='Freespace' newState='WARN' oldState='NORM' volume='volumename' FreeMB='99' totMB='200' percent='50.50' ThreshMBWarn='100' ThreshMBHigh='50' ThreshUtilWarn='95.00' ThreshUtilHigh='98.00'" sev=Minor
+
+Warn-Norm
+opcmsg a=UGMon o=Threshold msg_t="Hostname='testsystem' threshType='Freespace' newState='NORM' oldState='WARN' volume='volumename' FreeMB='101' totMB='200' percent='49.50' ThreshMBWarn='100' ThreshMBHigh='50' ThreshUtilWarn='95.00' ThreshUtilHigh='98.00'" sev=Normal
+
+Norm-High
+opcmsg a=UGMon o=Threshold msg_t="Hostname='testsystem' threshType='Freespace' newState='HIGH' oldState='NORM' volume='volumename' FreeMB='49' totMB='200' percent='75.50' ThreshMBWarn='100' ThreshMBHigh='50' ThreshUtilWarn='95.00' ThreshUtilHigh='98.00'" sev=Major
+
+High-Norm
+opcmsg a=UGMon o=Threshold msg_t="Hostname='testsystem' threshType='Freespace' newState='NORM' oldState='HIGH' volume='volumename' FreeMB='101' totMB='200' percent='49.50' ThreshMBWarn='100' ThreshMBHigh='50' ThreshUtilWarn='95.00' ThreshUtilHigh='98.00'" sev=Normal
+
+warn-high
+opcmsg a=UGMon o=Threshold msg_t="Hostname='testsystem' threshType='Freespace' newState='HIGH' oldState='WARN' volume='volumename' FreeMB='49' totMB='200' percent='75.50' ThreshMBWarn='100' ThreshMBHigh='50' ThreshUtilWarn='95.00' ThreshUtilHigh='98.00'" sev=Major
+
+high-warn
+opcmsg a=UGMon o=Threshold msg_t="Hostname='testsystem' threshType='Freespace' newState='WARN' oldState='HIGH' volume='volumename' FreeMB='99' totMB='200' percent='50.50' ThreshMBWarn='100' ThreshMBHigh='50' ThreshUtilWarn='95.00' ThreshUtilHigh='98.00'" sev=Minor
+
+
+util:
+
+Norm-Warn
+opcmsg a=UGMon o=Threshold msg_t="Hostname='testsystem' threshType='Utilization' newState='WARN' oldState='NORM' volume='volumename2' FreeMB='4000' totMB='100000' percent='96.00' ThreshMBWarn='100' ThreshMBHigh='50' ThreshUtilWarn='95.00' ThreshUtilHigh='98.00'" sev=Minor
+
+Warn-Norm
+opcmsg a=UGMon o=Threshold msg_t="Hostname='testsystem' threshType='Utilization' newState='NORM' oldState='WARN' volume='volumename2' FreeMB='6000' totMB='100000' percent='94.00' ThreshMBWarn='100' ThreshMBHigh='50' ThreshUtilWarn='95.00' ThreshUtilHigh='98.00'" sev=Normal
+
+Norm-High
+opcmsg a=UGMon o=Threshold msg_t="Hostname='testsystem' threshType='Utilization' newState='HIGH' oldState='NORM' volume='volumename2' FreeMB='999' totMB='100000' percent='99.00' ThreshMBWarn='100' ThreshMBHigh='50' ThreshUtilWarn='95.00' ThreshUtilHigh='98.00'" sev=Major
+
+High-Norm
+opcmsg a=UGMon o=Threshold msg_t="Hostname='testsystem' threshType='Utilization' newState='NORM' oldState='HIGH' volume='volumename2' FreeMB='6000' totMB='100000' percent='94.00' ThreshMBWarn='100' ThreshMBHigh='50' ThreshUtilWarn='95.00' ThreshUtilHigh='98.00'" sev=Normal
+
+Warn-high
+opcmsg a=UGMon o=Threshold msg_t="Hostname='testsystem' threshType='Utilization' newState='HIGH' oldState='WARN' volume='volumename2' FreeMB='999' totMB='100000' percent='99.00' ThreshMBWarn='100' ThreshMBHigh='50' ThreshUtilWarn='95.00' ThreshUtilHigh='98.00'" sev=Major
+
+high-warn
+opcmsg a=UGMon o=Threshold msg_t="Hostname='testsystem' threshType='Utilization' newState='WARN' oldState='HIGH' volume='volumename2' FreeMB='4000' totMB='100000' percent='96.00' ThreshMBWarn='100' ThreshMBHigh='50' ThreshUtilWarn='95.00' ThreshUtilHigh='98.00'" sev=Minor
